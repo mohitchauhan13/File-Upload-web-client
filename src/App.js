@@ -18,7 +18,7 @@ function App() {
     const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
 
     const uploadedChunks = await fetch(
-      `http://<EC2_PUBLIC_IP>:4000/status?fileId=${fileId}`
+      `${process.env.REACT_APP_BACKEND_URL}/status?fileId=${fileId}`
     )
       .then((res) => res.json())
       .then((data) => data.uploadedChunks || []);
@@ -34,7 +34,7 @@ function App() {
         Math.min(file.size, (i + 1) * CHUNK_SIZE)
       );
 
-      await fetch(`http://<EC2_PUBLIC_IP>:4000/upload`, {
+      await fetch(`${process.env.REACT_APP_BACKEND_URL}/upload`, {
         method: "POST",
         headers: {
           "x-file-id": fileId,
@@ -46,7 +46,7 @@ function App() {
       setProgress(Math.floor(((i + 1) / totalChunks) * 100));
     }
 
-    const response = await fetch(`http://<EC2_PUBLIC_IP>:4000/merge`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/merge`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ fileId, fileName: file.name, totalChunks }),

@@ -12,6 +12,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Inject backend URL into .env
+        run: |
+          echo "REACT_APP_BACKEND_URL=http://${{ secrets.EC2_PUBLIC_DNS }}:4000" > .env
+
       - name: Install dependencies
         run: npm install
 
